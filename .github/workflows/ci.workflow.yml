@@ -1,0 +1,61 @@
+name: Document API Test
+
+on:
+    push:
+        branches:
+            - '**'        # matches every branch
+
+jobs:
+    test:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4.2.1
+                with:
+                    token: ${{ github.token }}
+
+            -   name: Set work directories
+                run:
+                    mkdir -p storage/data-prague var/log \
+                    && chown -R runner:docker storage var \
+                    && chmod -R a+rwX storage var
+
+            -   name: Set environment
+                run: cp .env.dist .env
+
+            -   name: PHP Lint
+                uses: overtrue/phplint@9.5
+                with:
+                    path: .
+                    options: --exclude=*.log
+
+            -   name: Install vendors
+                run: composer install
+
+            -   name: PHP CS
+                run: composer phpcs
+
+            -   name: PHP static analysis
+                run: composer phpstan
+
+            -   name: UNIT tests
+                run: composer tests
+
+            -   name: Generate openapi.json
+                run: composer apidoc
+
+            -   name: FAILURE - List files
+                if: failure()
+                run: cat var/log/test.log
+
+            -   name: FAILURE - Archive artifacts
+                if: failure()
+                uses: actions/upload-artifact@v4
+                with:
+                    name: ci-log-files
+                    retention-days: 5
+                    path: |
+                        files-list.txt
+                        var/log/test.log

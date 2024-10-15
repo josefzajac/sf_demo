@@ -13,6 +13,6 @@ if ($_SERVER['APP_DEBUG']) {
 }
 
 $fs = new Filesystem();
-$fs->remove('/var/www/storage/data-prague');
+$fs->remove(__DIR__ . '/../storage/data-prague');
 
 set_exception_handler([new ErrorHandler(), 'handleException']);

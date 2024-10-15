@@ -7,7 +7,7 @@
         <ini name="error_reporting" value="-1"/>
         <env name="APP_ENV" value="test" force="true"/>
         <env name="APP_COMPANY" value="prague" force="true"/>
-        <env name="APP_DATA_DIR" value="/var/www/storage/data-prague" force="true"/>
+        <env name="APP_DATA_DIR" value="/home/runner/work/sf_demo/sf_demo/storage/data-prague" force="true"/>
         <server name="SHELL_VERBOSITY" value="-1"/>
         <server name="SYMFONY_PHPUNIT_REMOVE" value=""/>
         <server name="SYMFONY_PHPUNIT_VERSION" value="11.1"/>
