@@ -1,0 +1,58 @@
+name: Document API Test
+
+on:
+    push:
+        branches:
+            - '**'        # matches every branch
+
+jobs:
+    test:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v3.5.2
+                with:
+                    token: ${{ github.token }}
+
+            -   name: Set work directories
+                run: mkdir storage storage/data-prague storage/data-prague/images storage/data-prague/images/origin var var/log && chmod -R a+rwX storage storage/data-prague storage/data-prague/images storage/data-prague/images/origin var var/log
+
+            -   name: Set environment
+                run: cp .env.dist .env
+
+            -   name: PHP Lint
+                uses: overtrue/phplint@8.2
+                with:
+                    path: .
+                    options: --exclude=*.log
+
+            -   name: Install vendors
+                run: composer install
+
+            -   name: PHP CS
+                run: composer phpcs
+
+            -   name: PHP static analysis
+                run: composer phpstan
+
+            -   name: UNIT tests
+                run: composer tests
+
+            -   name: UNIT tests
+                run: composer apidoc
+
+            -   name: FAILURE - List files
+                if: failure()
+                run: cat var/log/test.log
+
+            -   name: FAILURE - Archive artifacts
+                if: failure()
+                uses: actions/upload-artifact@v3
+                with:
+                    name: ci-log-files
+                    retention-days: 5
+                    path: |
+                        files-list.txt
+                        var/log
