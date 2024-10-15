@@ -49,7 +49,7 @@ jobs:
 
             -   name: FAILURE - Archive artifacts
                 if: failure()
-                uses: actions/upload-artifact@v3
+                uses: actions/upload-artifact@v4
                 with:
                     name: ci-log-files
                     retention-days: 5
