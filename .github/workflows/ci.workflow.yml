@@ -23,7 +23,7 @@ jobs:
                 run: cp .env.dist .env
 
             -   name: PHP Lint
-                uses: overtrue/phplint@8.2
+                uses: overtrue/phplint@9.5
                 with:
                     path: .
                     options: --exclude=*.log
