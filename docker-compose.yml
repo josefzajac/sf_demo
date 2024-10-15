@@ -1,0 +1,6 @@
+services:
+  document-php:
+     build:
+         context: ./.docker/php-fpm
+     volumes:
+         - ./:/var/www
